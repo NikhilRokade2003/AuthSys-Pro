@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Registration & OTP</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1a1a2e;
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #00d4ff;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #00d4ff;
+            background-color: #16213e;
+            color: white;
+            border-radius: 8px;
+        }
+        button {
+            background: linear-gradient(45deg, #00d4ff, #a855f7);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #16213e;
+            border: 1px solid #00d4ff;
+        }
+        .success { border-color: #00ff7f; }
+        .error { border-color: #ff6b6b; }
+    </style>
+</head>
+<body>
+    <h1>🔥 SecureAuth Pro - Test Registration & OTP</h1>
+    
+    <div class="form-group">
+        <label>Name:</label>
+        <input type="text" id="name" value="Test User" />
+    </div>
+    
+    <div class="form-group">
+        <label>Email:</label>
+                        <input type="email" id="email" value="nikhilsrokade2203@gmail.com" placeholder="Enter your email">
+    </div>
+    
+    <div class="form-group">
+        <label>Password:</label>
+        <input type="password" id="password" value="TestPassword123!" />
+    </div>
+    
+    <div class="form-group">
+        <label>Phone:</label>
+        <input type="tel" id="phone" value="+918956122003" />
+    </div>
+    
+    <button onclick="registerUser()">🚀 Register & Send OTP</button>
+    <button onclick="sendOTPManually()">📧 Send OTP Manually</button>
+    
+    <div class="form-group" style="margin-top: 30px;">
+        <label>Enter OTP from Email:</label>
+        <input type="text" id="otp" placeholder="Enter 6-digit OTP" maxlength="6" />
+        <button onclick="verifyOTP()">✅ Verify OTP</button>
+    </div>
+    
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        
+        async function registerUser() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value;
+            
+            try {
+                showResult('🔄 Registering user...', 'info');
+                
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name, email, password, phone, terms: true
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`✅ Registration successful!<br>
+                               📧 OTP Sent: ${data.otpSent ? 'Yes' : 'No'}<br>
+                               👤 User ID: ${data.user?.id}<br>
+                               💌 Check your email for OTP!`, 'success');
+                               
+                    if (!data.otpSent) {
+                        // Automatically send OTP if registration didn't
+                        setTimeout(sendOTPManually, 1000);
+                    }
+                } else {
+                    showResult(`❌ Registration failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function sendOTPManually() {
+            const email = document.getElementById('email').value;
+            
+            try {
+                showResult('📧 Sending OTP...', 'info');
+                
+                const response = await fetch(`${API_URL}/api/otp/send-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        purpose: 'verification'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`✅ OTP sent successfully!<br>
+                               📧 Check ${email} for OTP<br>
+                               ⏰ Expires in: ${data.expiresIn} seconds`, 'success');
+                } else {
+                    showResult(`❌ OTP sending failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function verifyOTP() {
+            const email = document.getElementById('email').value;
+            const otp = document.getElementById('otp').value;
+            
+            if (otp.length !== 6) {
+                showResult('❌ Please enter a valid 6-digit OTP', 'error');
+                return;
+            }
+            
+            try {
+                showResult('🔍 Verifying OTP...', 'info');
+                
+                const response = await fetch(`${API_URL}/api/otp/verify`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        otp: otp,
+                        identifier: email,
+                        action: 'email-verification'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showResult(`🎉 OTP Verified Successfully!<br>
+                               ✅ Email verified: ${data.user?.is_email_verified}<br>
+                               👤 User: ${data.user?.name}<br>
+                               🔑 You can now login with your credentials!`, 'success');
+                } else {
+                    showResult(`❌ OTP verification failed: ${data.message}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+        
+        function showResult(message, type) {
+            const result = document.getElementById('result');
+            result.innerHTML = message;
+            result.className = `result ${type}`;
+            result.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

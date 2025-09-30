@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7
+    container_name: hackerauth-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: hackersecret
+      MONGO_INITDB_DATABASE: hackerauth
+    volumes:
+      - mongodb_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - hackerauth-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hackerauth-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      MONGODB_URI: mongodb://admin:hackersecret@mongodb:27017/hackerauth?authSource=admin
+      FRONTEND_URL: http://localhost:3000
+      JWT_SECRET: your-production-jwt-secret-change-this
+      JWT_REFRESH_SECRET: your-production-refresh-secret-change-this
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - hackerauth-network
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hackerauth-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: your-production-nextauth-secret-change-this
+      NEXT_PUBLIC_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - hackerauth-network
+
+  # Redis (for session storage - optional)
+  redis:
+    image: redis:7-alpine
+    container_name: hackerauth-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass hackersecret
+    volumes:
+      - redis_data:/data
+    networks:
+      - hackerauth-network
+
+volumes:
+  mongodb_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  hackerauth-network:
+    driver: bridge
+
+# Health checks
+  # Add this to backend service
+  # healthcheck:
+  #   test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+  #   interval: 30s
+  #   timeout: 10s
+  #   retries: 3
+  
+  # Add this to frontend service  
+  # healthcheck:
+  #   test: ["CMD", "curl", "-f", "http://localhost:3000"]
+  #   interval: 30s
+  #   timeout: 10s
+  #   retries: 3
