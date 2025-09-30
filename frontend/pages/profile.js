@@ -278,7 +278,14 @@ const ProfilePage = () => {
 
   return (
     <Layout title="Profile Dashboard - SecureAuth Pro" user={currentUser} onLogout={handleLogout}>
-      <div className="flex-1 px-4 py-8">
+      {/* 3D Background Effects */}
+      <div className="fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-blue/20 rounded-full filter blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full filter blur-3xl animate-float" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-3/4 left-1/2 w-64 h-64 bg-neon-cyan/15 rounded-full filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
+      </div>
+
+      <div className="flex-1 px-4 py-8 relative">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -368,115 +375,129 @@ const ProfilePage = () => {
           {/* Tab Content */}
           <motion.div variants={itemVariants}>
             {activeTab === 'profile' && (
-              <div className="card-hacker">
-                <h2 className="text-xl font-bold text-hacker-green mb-6">Profile Information</h2>
-                
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <motion.div
+                variants={itemVariants}
+                className="relative"
+              >
+                {/* 3D Card Background */}
+                <div className="absolute inset-0 bg-gradient-card rounded-2xl transform rotate-1 scale-105 opacity-50"></div>
+                <div className="absolute inset-0 bg-gradient-card rounded-2xl transform -rotate-1 scale-102 opacity-30"></div>
+
+                {/* Main Card */}
+                <div className="relative auth-card backdrop-blur-xl border border-neon-blue/30 shadow-neon p-8 w-full max-w-4xl">
+                  <h2 className="text-3xl font-bold text-white mb-8 text-center">
+                    Profile Information
+                  </h2>
+
+                  <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-white font-medium text-sm mb-2">
+                          Full Name
+                        </label>
+                        <input
+                          {...register('name', {
+                            required: 'Name is required',
+                            minLength: {
+                              value: 2,
+                              message: 'Name must be at least 2 characters'
+                            }
+                          })}
+                          type="text"
+                          className="input-field w-full border-2 border-dark-600 bg-dark-800/70 focus:border-neon-blue focus:shadow-neon transition-all duration-300"
+                          disabled={isLoading}
+                        />
+                        {errors.name && (
+                          <p className="text-error text-sm mt-1">
+                            {errors.name.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-white font-medium text-sm mb-2">
+                          Email Address
+                        </label>
+                        <input
+                          {...register('email')}
+                          type="email"
+                          className="input-field w-full border-2 border-dark-600 bg-dark-800/70 focus:border-neon-blue focus:shadow-neon transition-all duration-300 opacity-50"
+                          disabled={true}
+                        />
+                        <p className="text-dark-400 text-xs mt-1">
+                          Email cannot be changed for security reasons
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-white font-medium text-sm mb-2">
+                          Phone Number
+                        </label>
+                        <input
+                          {...register('phone', {
+                            pattern: {
+                              value: /^[\+]?[1-9][\d]{0,15}$/,
+                              message: 'Invalid phone number'
+                            }
+                          })}
+                          type="tel"
+                          className="input-field w-full border-2 border-dark-600 bg-dark-800/70 focus:border-neon-blue focus:shadow-neon transition-all duration-300"
+                          disabled={isLoading}
+                        />
+                        {errors.phone && (
+                          <p className="text-error text-sm mt-1">
+                            {errors.phone.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div>
+                        <label className="block text-white font-medium text-sm mb-2">
+                          Account Type
+                        </label>
+                        <input
+                          value={currentUser?.account_type || 'user'}
+                          className="input-field w-full border-2 border-dark-600 bg-dark-800/70 focus:border-neon-blue focus:shadow-neon transition-all duration-300 opacity-50"
+                          disabled={true}
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-hacker-green font-mono text-sm mb-2">
-                        Full Name
+                      <label className="block text-white font-medium text-sm mb-2">
+                        Bio
                       </label>
-                      <input
-                        {...register('name', {
-                          required: 'Name is required',
-                          minLength: {
-                            value: 2,
-                            message: 'Name must be at least 2 characters'
-                          }
-                        })}
-                        type="text"
-                        className="input-hacker w-full"
+                      <textarea
+                        {...register('bio')}
+                        rows={4}
+                        className="input-field w-full resize-none border-2 border-dark-600 bg-dark-800/70 focus:border-neon-blue focus:shadow-neon transition-all duration-300"
+                        placeholder="Tell us about yourself..."
                         disabled={isLoading}
                       />
-                      {errors.name && (
-                        <p className="text-red-400 text-sm mt-1 font-mono">
-                          {errors.name.message}
-                        </p>
-                      )}
                     </div>
 
-                    <div>
-                      <label className="block text-hacker-green font-mono text-sm mb-2">
-                        Email Address
-                      </label>
-                      <input
-                        {...register('email')}
-                        type="email"
-                        className="input-hacker w-full opacity-50"
-                        disabled={true}
-                      />
-                      <p className="text-hacker-green/50 text-xs mt-1 font-mono">
-                        Email cannot be changed for security reasons
-                      </p>
-                    </div>
-
-                    <div>
-                      <label className="block text-hacker-green font-mono text-sm mb-2">
-                        Phone Number
-                      </label>
-                      <input
-                        {...register('phone', {
-                          pattern: {
-                            value: /^[\+]?[1-9][\d]{0,15}$/,
-                            message: 'Invalid phone number'
-                          }
-                        })}
-                        type="tel"
-                        className="input-hacker w-full"
-                        disabled={isLoading}
-                      />
-                      {errors.phone && (
-                        <p className="text-red-400 text-sm mt-1 font-mono">
-                          {errors.phone.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div>
-                      <label className="block text-hacker-green font-mono text-sm mb-2">
-                        Account Type
-                      </label>
-                      <input
-                        value={currentUser?.account_type || 'user'}
-                        className="input-hacker w-full opacity-50"
-                        disabled={true}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-hacker-green font-mono text-sm mb-2">
-                      Bio
-                    </label>
-                    <textarea
-                      {...register('bio')}
-                      rows={4}
-                      className="input-hacker w-full resize-none"
-                      placeholder="Tell us about yourself..."
+                    <motion.button
+                      type="submit"
                       disabled={isLoading}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="btn-hacker flex items-center space-x-2"
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="loading-spinner w-5 h-5"></div>
-                        <span>Updating...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>💾</span>
-                        <span>SAVE CHANGES</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              </div>
+                      className="btn-primary w-full flex items-center justify-center space-x-2 py-4 text-lg font-semibold"
+                      whileHover={{ scale: 1.02, boxShadow: "0 0 30px rgba(0, 212, 255, 0.5)" }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      {isLoading ? (
+                        <>
+                          <div className="loading-spinner w-6 h-6"></div>
+                          <span>Updating...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>💾</span>
+                          <span>SAVE CHANGES</span>
+                        </>
+                      )}
+                    </motion.button>
+                  </form>
+                </div>
+              </motion.div>
             )}
 
             {activeTab === 'security' && (

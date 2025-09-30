@@ -6,13 +6,15 @@ export const suppressHydrationWarning = () => {
     console.error = (...args) => {
       const message = args[0];
       
-      // Filter out hydration warnings related to browser extensions
+      // Filter out hydration warnings related to browser extensions and MetaMask errors
       if (
-        typeof message === 'string' && 
+        typeof message === 'string' &&
         (
           message.includes('Extra attributes from the server') ||
           message.includes('fdprocessedid') ||
-          message.includes('Hydration failed because the initial UI does not match')
+          message.includes('Hydration failed because the initial UI does not match') ||
+          message.includes('Failed to connect to MetaMask') ||
+          message.includes('MetaMask extension not found')
         )
       ) {
         // Suppress these warnings in development
