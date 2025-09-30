@@ -1,241 +1,92 @@
-# Hacker-Themed Full-Stack Authentication System
+🔐 Auth System with Google & Facebook Login, OTP & Profile Management
+A full-stack authentication system with an interactive UI.
+Includes Login/Signup with Google & Facebook, OTP verification (Email & Phone),
+Profile update, Forgot Password, Database authentication, and a Welcome Page.
 
-A production-ready authentication system with a cyberpunk/hacker-inspired UI featuring neon glowing effects, terminal aesthetics, and comprehensive security features.
+🚀 Features
+✅ Email/Password Signup & Login
+✅ Google OAuth Login
+✅ Facebook OAuth Login
+✅ Database Authentication (MongoDB/MySQL/Postgres)
+✅ OTP Verification
+Email OTP (via Nodemailer)
+SMS OTP (via Twilio/MSG91)
+✅ Forgot Password (Reset link/OTP)
+✅ Profile Management
+Update Name, Phone, Bio, Profile Picture
+✅ Secure Password Hashing (bcrypt/argon2)
+✅ JWT Authentication / Session Handling
+✅ Responsive Interactive UI (Tailwind + Framer Motion)
+✅ Welcome Page with personalized greeting
+🛠️ Tech Stack
+Frontend
 
-## 🚀 Features
+React / Next.js
+TailwindCSS
+Framer Motion
+Backend
 
-### Authentication
-- ✅ Email/Password Signup & Login
-- ✅ Google OAuth Login
-- ✅ Facebook OAuth Login
-- ✅ JWT Authentication with Refresh Tokens
-- ✅ Secure Password Hashing (bcrypt)
+Node.js / Express
+Passport.js / Firebase Auth
+JWT for Authentication
+Database
 
-### Verification & Recovery
-- ✅ Email OTP Verification (Nodemailer)
-- ✅ SMS OTP Verification (Twilio)
-- ✅ Forgot Password (Reset Link + OTP)
-- ✅ Account Email Verification
+MongoDB / MySQL / PostgreSQL
+Services
 
-### Profile Management
-- ✅ Update Profile Information (Name, Phone, Bio)
-- ✅ Profile Picture Upload (Cloudinary)
-- ✅ Account Settings & Security
+Nodemailer (Email OTP & Reset links)
+Twilio / MSG91 (Phone OTP)
+Cloudinary / AWS S3 (Profile Pictures)
+📸 Screenshots
 
-### Security Features
-- ✅ Rate Limiting on Authentication Routes
-- ✅ CSRF/XSS Protection
-- ✅ JWT Token Rotation
-- ✅ Password Strength Validation
-- ✅ Account Lockout Protection
+(Add your screenshots here once the UI is ready)
 
-## 🛠️ Tech Stack
+🖼️ Welcome Page
+<img width="1263" height="859" alt="Screenshot 2025-09-30 185932" src="https://github.com/user-attachments/assets/8581b677-3c7d-4ca1-9cfb-e07c4d4dbaec" />
 
-### Frontend
-- **Next.js 14** - React framework with App Router
-- **TailwindCSS** - Utility-first CSS framework
-- **Framer Motion** - Animation library
-- **NextAuth.js** - Authentication library
-- **React Hook Form** - Form handling
-- **React Hot Toast** - Notifications
+🖼️ Login Page
+<img width="797" height="856" alt="Screenshot 2025-09-30 190009" src="https://github.com/user-attachments/assets/4bbb4164-a9f2-4a60-8374-708da654c11b" />
 
-### Backend
-- **Express.js** - Node.js web framework
-- **MongoDB + Mongoose** - Database and ODM
-- **JWT** - JSON Web Tokens for authentication
-- **bcryptjs** - Password hashing
-- **Passport.js** - OAuth strategies
+🖼️ Signup Page with Google/Facebook
+<img width="833" height="863" alt="Screenshot 2025-09-30 184313" src="https://github.com/user-attachments/assets/80035aa2-9f32-4ae1-ad38-1eb1d7ffc46e" />
+<img width="800" height="865" alt="Screenshot 2025-09-30 185949" src="https://github.com/user-attachments/assets/ba5d4b83-1ad8-4ef3-a2e0-b9db03e73168" />
 
-### Services
-- **Nodemailer** - Email service
-- **Twilio** - SMS service
-- **Cloudinary** - Image storage and manipulation
+🖼️ Profile Dashboard
+<img width="792" height="854" alt="Screenshot 2025-09-30 185905" src="https://github.com/user-attachments/assets/99b0ac4a-7796-4680-a319-37cd174e836b" />
+<img width="802" height="849" alt="Screenshot 2025-09-30 185819" src="https://github.com/user-attachments/assets/e7dba61b-e557-4a9e-b080-e26c513b1b45" />
+<img width="796" height="858" alt="Screenshot 2025-09-30 185833" src="https://github.com/user-attachments/assets/6aeb5bfd-1a87-41f5-8318-648833247cf8" />
+<img width="794" height="856" alt="Screenshot 2025-09-30 185848" src="https://github.com/user-attachments/assets/7ee18353-ddf7-4c6c-8133-967a388a0a6e" />
 
-## 📂 Project Structure
 
-```
-auth-system/
-├── frontend/                 # Next.js application
-│   ├── pages/               # Page components
-│   ├── components/          # Reusable components
-│   ├── styles/             # CSS and styling
-│   ├── lib/                # Utility functions
-│   └── public/             # Static assets
-├── backend/                # Express API server
-│   ├── routes/             # API routes
-│   ├── models/             # Database models
-│   ├── middleware/         # Custom middleware
-│   ├── utils/              # Utility functions
-│   └── config/             # Configuration files
-└── docs/                   # Documentation
-```
+🔒 Security
+<img width="1650" height="762" alt="Screenshot 2025-09-30 190227" src="https://github.com/user-attachments/assets/9f412e1e-6b0b-46f4-a6bf-69a2bda6f66b" />
 
-## 🚀 Quick Start
+Passwords are hashed using bcrypt/argon2
 
-### Prerequisites
-- Node.js 18+
-- MongoDB
-- Email service credentials (Gmail/SendGrid)
-- SMS service credentials (Twilio)
-- OAuth app credentials (Google, Facebook)
+JWT tokens secured with strong secret key
 
-### Installation
+OTPs expire in 5 minutes
 
-1. **Clone and setup**
-```bash
-git clone <repository-url>
-cd auth-system
-```
+Rate limiting on login attempts
 
-2. **Backend Setup**
-```bash
-cd backend
-npm install
-cp .env.example .env
-# Configure your environment variables
-npm run dev
-```
+🛡️ Extra Features (Optional)
 
-3. **Frontend Setup**
-```bash
-cd frontend
-npm install
-cp .env.local.example .env.local
-# Configure your environment variables
-npm run dev
-```
+Dark/Light Mode
 
-### Environment Variables
+Remember Me (persistent login)
 
-#### Backend (.env)
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/hacker-auth
-JWT_SECRET=your-super-secret-jwt-key
-JWT_REFRESH_SECRET=your-refresh-secret-key
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
-TWILIO_ACCOUNT_SID=your-twilio-sid
-TWILIO_AUTH_TOKEN=your-twilio-token
-TWILIO_PHONE_NUMBER=+1234567890
-CLOUDINARY_CLOUD_NAME=your-cloud-name
-CLOUDINARY_API_KEY=your-api-key
-CLOUDINARY_API_SECRET=your-api-secret
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-FACEBOOK_APP_ID=your-facebook-app-id
-FACEBOOK_APP_SECRET=your-facebook-app-secret
-FRONTEND_URL=http://localhost:3000
-```
+Two-Factor Authentication (2FA)
 
-#### Frontend (.env.local)
-```env
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=your-nextauth-secret
-NEXT_PUBLIC_API_URL=http://localhost:5000
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-FACEBOOK_CLIENT_ID=your-facebook-app-id
-FACEBOOK_CLIENT_SECRET=your-facebook-app-secret
-```
+Admin Dashboard for User Management
 
-## 🎨 UI/UX Features
+🤝 Contributing
 
-### Hacker Theme
-- **Dark Terminal Aesthetic**: Pure black background with neon accents
-- **Neon Glow Effects**: Green (#00ff7f) and blue (#00e0ff) glowing elements
-- **Typography**: Source Code Pro for terminal feel
-- **Animations**: Glitch effects, smooth transitions, pulse animations
+Pull requests are welcome! Please fork this repo and submit a PR.
 
-### Responsive Design
-- Mobile-first approach
-- Adaptive layouts for all screen sizes
-- Touch-friendly interactions
+📜 License
 
-## 🔒 Security Features
+This project is licensed under the MIT License.
 
-- **Password Security**: bcrypt hashing with salt rounds
-- **JWT Tokens**: httpOnly cookies with expiration
-- **Rate Limiting**: Prevent brute force attacks
-- **Input Validation**: Comprehensive server-side validation
-- **CORS Protection**: Configured for production
-- **XSS Protection**: Helmet.js security headers
+👨‍💻 Author
 
-## 📱 Pages & Features
-
-1. **Welcome Page** - Animated landing with user greeting
-2. **Login Page** - Email/password + OAuth options
-3. **Signup Page** - Registration with validation
-4. **OTP Verification** - Email and SMS verification
-5. **Forgot Password** - Reset via email or SMS
-6. **Profile Dashboard** - Account management
-7. **Admin Panel** - User management (optional)
-
-## 🚀 Deployment
-
-### Frontend (Vercel)
-```bash
-# Deploy to Vercel
-vercel --prod
-```
-
-### Backend (Render/Railway)
-```bash
-# Configure environment variables on your platform
-# Deploy using Git integration
-```
-
-### Database (MongoDB Atlas)
-- Setup MongoDB Atlas cluster
-- Configure network access
-- Update connection string
-
-## 🧪 Testing
-
-```bash
-# Backend tests
-cd backend
-npm test
-
-# Frontend tests
-cd frontend
-npm test
-```
-
-## 📖 API Documentation
-
-### Authentication Endpoints
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `POST /api/auth/refresh` - Refresh JWT token
-
-### OTP Endpoints
-- `POST /api/otp/send-email` - Send email OTP
-- `POST /api/otp/send-sms` - Send SMS OTP
-- `POST /api/otp/verify` - Verify OTP
-
-### Profile Endpoints
-- `GET /api/profile` - Get user profile
-- `PUT /api/profile` - Update profile
-- `POST /api/profile/upload` - Upload profile picture
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support, email support@hackerauth.com or create an issue on GitHub.
-
----
-
-**Built with ❤️ and ⚡ by the Hacker Auth Team**
+Developed by Nikhil Rokade✨
